@@ -46,12 +46,14 @@ Frontend runs at `http://localhost:3000`
 ### Run Tests
 
 **Backend tests:**
+
 ```bash
 cd backend
 python -m pytest test_*.py
 ```
 
 **Frontend tests:**
+
 ```bash
 cd frontend
 npm test
@@ -60,6 +62,7 @@ npm test
 ## Deployment
 
 See [DEPLOY.md](DEPLOY.md) for detailed deployment instructions for:
+
 - Render.com (easiest, recommended)
 - Google Cloud Run (most powerful free tier)
 - Railway.app (simplest dashboard)
@@ -116,6 +119,7 @@ Adriatic-Claim-Co/
 ## API Endpoints
 
 ### Owners
+
 - `POST /api/owners` - Create new owner
 - `GET /api/owners` - List all owners
 - `GET /api/owners/<id>` - Get owner by ID
@@ -123,6 +127,7 @@ Adriatic-Claim-Co/
 - `DELETE /api/owners/<id>` - Delete owner
 
 ### Claims
+
 - `POST /api/claims` - Create new claim
 - `GET /api/claims` - List all claims
 - `GET /api/claims/<id>` - Get claim by ID
@@ -130,11 +135,13 @@ Adriatic-Claim-Co/
 - `DELETE /api/claims/<id>` - Delete claim
 
 ### Health
+
 - `GET /health` - Health check endpoint
 
 ## Environment Variables
 
 **Backend (.env)**:
+
 ```bash
 DATABASE_URL=postgresql://user:password@host:5432/database
 FLASK_ENV=production
@@ -143,6 +150,7 @@ PORT=5000
 ```
 
 **Frontend (.env.production)**:
+
 ```bash
 REACT_APP_API_URL=https://your-backend-url.onrender.com
 ```
@@ -162,6 +170,7 @@ This project is private and proprietary.
 ## Support
 
 For deployment issues, see [DEPLOY.md](DEPLOY.md) or check platform documentation:
+
 - [Render Docs](https://render.com/docs)
 - [Google Cloud Run Docs](https://cloud.google.com/run/docs)
 - [Railway Docs](https://docs.railway.app)
