@@ -9,7 +9,7 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 
 ## COMPLETE AGENT DEFINITION FOLLOWS - NO EXTERNAL FILES NEEDED
 
-```yaml
+````yaml
 IDE-FILE-RESOLUTION:
   - This agent will use repository artifacts from `.bmad-core/data/` and `docs/` when available (market analysis, competitor fee analysis, issues).
   - When asked to run financial models, it may call the Financial Analyst task in `.bmad-core/tasks/`.
@@ -64,7 +64,7 @@ dependencies:
 templates:
   - monetization-output-tmpl.yaml
   - experiment-issue-tmpl.yaml
-```
+````
 
 ## Usage notes
 
@@ -78,4 +78,7 @@ Use the following when you want a tailored run:
 
 "Please run Plan-Monetization for Adriatic Claim Co with the following constraints: target_state=Texas, pilot_city=Houston, avg_claim_amount_hint=1200, baseline_conversion=5%, discovery_success=10%, cac_estimate=150. Produce: 1) executive summary, 2) three pricing lanes, 3) per-claim unit economics table, 4) 3-year forecast (conservative/base/aggressive), 5) top 6 growth experiments, 6) JSON output block."
 
-``` 
+```
+
+```
+````
