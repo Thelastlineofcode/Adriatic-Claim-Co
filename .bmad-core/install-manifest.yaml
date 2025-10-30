@@ -6,6 +6,23 @@ ides_setup:
   - github-copilot
 expansion_packs: []
 files:
+  - path: .bmad-core/core-config.yaml
+    hash: 073cf6d2527c545d
+    modified: false
+  - path: .bmad-core/templates/qa-gate-tmpl.yaml
+    hash: 80bd060708208984
+    modified: false
+  - path: .bmad-core/tasks/advanced-elicitation.md
+    hash: d39118bf32237a21
+    modified: false
+version: 4.44.3
+installed_at: '2025-10-30T14:16:06.228Z'
+install_type: full
+agent: null
+ides_setup:
+  - github-copilot
+expansion_packs: []
+files:
   - path: .bmad-core/working-in-the-brownfield.md
     hash: 07cc8eb6fc664bb8
     modified: false
