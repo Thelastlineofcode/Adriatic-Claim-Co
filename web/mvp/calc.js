@@ -56,7 +56,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const res = compute(data.claim_amount, data.flat_fee);
     data.calculation = res;
 
-    fetch("/api/claims", {
+    // POST explicitly to the local Flask stub. If you serve the static files
+    // from a different origin, enable CORS or update this URL accordingly.
+    fetch("http://127.0.0.1:5001/api/claims", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

@@ -60,7 +60,7 @@ def create_claim():
         'flat_fee': float(flat_fee) if flat_fee else None,
         'net_flat': net_flat,
         'net': net_flat if (net_flat is not None and net_flat > net_contingency) else net_contingency,
-        'message': 'Claim recorded (development stub).'
+        'message': 'Claim recorded (Adriatic Claim Co development stub).'
     }
 
     # redact sensitive fields before saving
@@ -71,10 +71,28 @@ def create_claim():
     if 'ssn' in to_save:
         to_save['ssn'] = 'REDACTED'
 
-    to_save.update({'calculation': response})
+    # annotate saved record with handler information
+    to_save.update({'calculation': response, 'handled_by': 'Adriatic Claim Co (MVP stub)'})
     _append_claim(to_save)
 
     return jsonify(response)
+
+
+@app.route('/api/admin/claims', methods=['GET'])
+def list_claims():
+    """Development-only endpoint: return stored claims as JSON.
+
+    WARNING: This endpoint is not authenticated. Only use locally or behind
+    proper access controls in staging/production.
+    """
+    if not os.path.exists(CLAIMS_FILE):
+        return jsonify([])
+    try:
+        with open(CLAIMS_FILE, 'r') as f:
+            records = json.load(f)
+    except Exception:
+        records = []
+    return jsonify(records)
 
 if __name__ == '__main__':
     # Run on port 5001 to avoid conflict with other services

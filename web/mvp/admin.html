@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Adriatic Claim Co — Admin (Dev)</title>
+    <style>
+      body {
+        font-family:
+          system-ui,
+          Segoe UI,
+          Roboto,
+          Arial;
+        padding: 12px;
+        max-width: 980px;
+        margin: auto;
+      }
+      pre {
+        background: #f4f6f8;
+        padding: 8px;
+        border-radius: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Adriatic Claim Co — Dev Admin</h1>
+    <p>
+      This simple admin page fetches stored claims from the local Flask stub
+      <code>/api/admin/claims</code>. For development only.
+    </p>
+
+    <button id="reload">Reload claims</button>
+    <div id="list"></div>
+
+    <script>
+      async function load() {
+        const el = document.getElementById("list");
+        el.innerHTML = "Loading...";
+        try {
+          const r = await fetch("http://127.0.0.1:5001/api/admin/claims");
+          const j = await r.json();
+          if (!j || j.length === 0) {
+            el.innerHTML = "<p>No claims found.</p>";
+            return;
+          }
+          const html = j
+            .map(
+              (c, i) =>
+                `<section style="border:1px solid #ddd;padding:8px;margin:8px 0"><strong>#${i + 1} - ${c.name || "unknown"}</strong><div><em>gross:</em> $${(c.calculation?.gross || 0).toFixed(2)}</div><pre>${JSON.stringify(c, null, 2)}</pre></section>`
+            )
+            .join("");
+          el.innerHTML = html;
+        } catch (err) {
+          el.innerHTML = "<p>Error loading claims: " + err.message + "</p>";
+        }
+      }
+      document.getElementById("reload").addEventListener("click", load);
+      load();
+    </script>
+  </body>
+</html>
