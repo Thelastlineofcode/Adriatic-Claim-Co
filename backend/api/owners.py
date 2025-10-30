@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from models.models import Owner
 from db import db
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 
 owners_bp = Blueprint('owners', __name__, url_prefix='/api/owners')
 
@@ -11,11 +12,24 @@ def create_owner():
     if not data or 'first_name' not in data or 'last_name' not in data:
         return jsonify({'error': 'Missing required fields'}), 400
     
+    # Normalize types where needed
+    dob = data.get('date_of_birth')
+    if isinstance(dob, str) and dob:
+        try:
+            # Accept YYYY-MM-DD (HTML date input)
+            dob = datetime.strptime(dob, "%Y-%m-%d")
+        except ValueError:
+            # Try full ISO format as fallback
+            try:
+                dob = datetime.fromisoformat(dob)
+            except ValueError:
+                return jsonify({'error': 'Invalid date_of_birth format. Use YYYY-MM-DD'}), 400
+
     owner = Owner(
         first_name=data['first_name'],
         last_name=data['last_name'],
         middle_name=data.get('middle_name'),
-        date_of_birth=data.get('date_of_birth'),
+        date_of_birth=dob,
         ssn=data.get('ssn'),
         tax_id=data.get('tax_id'),
         email=data.get('email'),

@@ -14,11 +14,24 @@ except Exception:
 app = Flask(__name__)
 
 # Configure CORS for production
+# Allow configuration via env var CORS_ALLOWED_ORIGINS (comma-separated),
+# else default to local dev and Firebase Hosting domains.
+cors_env = os.environ.get("CORS_ALLOWED_ORIGINS")
+if cors_env:
+    allowed_origins = [o.strip() for o in cors_env.split(",") if o.strip()]
+else:
+    # Regex patterns supported by Flask-CORS
+    allowed_origins = [
+        "http://localhost:3000",
+        r"https://.*\\.web\\.app",
+        r"https://.*\\.firebaseapp\\.com",
+    ]
+
 CORS(app, resources={
     r"/api/*": {
-        "origins": ["*"],  # Update with your frontend domain in production
+        "origins": allowed_origins,
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
+        "allow_headers": ["Content-Type", "Authorization"],
     }
 })
 

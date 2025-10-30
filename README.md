@@ -1,176 +1,63 @@
-# Adriatic Claim Co
+1. Agentic Planning (BMAD Phase 1)
+A. The Analyst (Market Research & Ideation)
 
-Claims management system for tracking property claims with owner intake forms and workflow management.
+Analyze the clientele: Through market research agents, identify individuals and organizations holding unclaimed assets in Houston, Texas, and assess demographics such as language, geography, and needs. Compare local requirements (Texas Property Code, dormancy tests, compliance) and document online and out-of-state market dynamics.​
 
-## Tech Stack
+Determine differentiation: Benchmark existing services. Ask, "What gaps exist in service quality, pricing transparency, or accessibility that we can address?" Use AI-driven tools for researching both conventional competitors and digital platforms.​
 
-- **Frontend**: React 18 with React Hook Form
-- **Backend**: Flask (Python 3.11) with SQLAlchemy
-- **Database**: PostgreSQL (production) / SQLite (development)
-- **Testing**: Jest + React Testing Library (frontend), unittest (backend)
+Core values articulation: Map the core brand values relevant to the unclaimed property sector, e.g., trustworthiness, transparency, service to underserved populations, and expertise in legal compliance.​
 
-## Features
+Fee philosophy: Research market averages and develop your value proposition accordingly, for example, competitive contingency rates, reduced barriers (no upfront payment), or premium "white-glove" service.​
 
-- ✅ Owner claim intake form with validation
-- ✅ Email and phone validation
-- ✅ Loading states and error handling
-- ✅ Accessibility (ARIA attributes)
-- ✅ RESTful API for owners and claims
-- ✅ Comprehensive test coverage
-- ✅ Production-ready deployment configuration
+Scope definition: Decide, through competitive analysis, if you'll offer only state-level claims or expand to federal, bankruptcy, or multi-state property searches.​
 
-## Local Development
+B. Product Manager (Requirements & Specification)
 
-### Backend Setup
+Service model clarity: Detail requirements for running the business remotely—digital intake forms, remote ID validation, e-signatures, and compliance automation.
 
-```bash
-cd backend
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-python app.py
-```
+Positioning: Use user profiles and market segmentation to determine if your identity is "Houston’s Local Expert" or a "Tech-forward Remote Claims Service".
 
-Backend runs at `http://localhost:5000`
+Value Statement: Draft a brand mission/vision statement synthesizing unique value, key differentiators, and operational model.​
 
-### Frontend Setup
+C. Architect (System & Brand Design)
 
-```bash
-cd frontend
-npm install --legacy-peer-deps
-npm start
-```
+Visual and trust design: Select brand colors, fonts, and graphics that visually communicate responsibility and financial security while distinguishing you from government portals.​
 
-Frontend runs at `http://localhost:3000`
+Communication pipeline: Architect a customer journey—from initial contact, through documentation, filing, progress updates, and claim payout.
 
-### Run Tests
+Lean structure representation: If automation is your focus, design systems that highlight tech efficiency or keep the automation invisible and present a human-focused front.​
 
-**Backend tests:**
+2. Context-Engineered Development (BMAD Phase 2)
+A. Epic Sharding (Brand Implementation Breakdown)
 
-```bash
-cd backend
-python -m pytest test_*.py
-```
+Shard the PRD (from BMAD planning) into actionable tasks: marketing copy, website flow, FAQ content, outreach templates, compliance scripts.
 
-**Frontend tests:**
+Ensure every task or asset relates back to core values, differentiation, and compliance commitments.
 
-```bash
-cd frontend
-npm test
-```
+B. Scrum Master & Developer Roles
 
-## Deployment
+Brand storytelling: Develop content that emotionally resonates with claimants—focus on clarity, relief, and empowerment.
 
-See [DEPLOY.md](DEPLOY.md) for detailed deployment instructions for:
+Visual guidelines documentation: Codify logo use, imagery standards, document templates, and communication tone.
 
-- Render.com (easiest, recommended)
-- Google Cloud Run (most powerful free tier)
-- Railway.app (simplest dashboard)
+Continuous review: AI and human quality checks ensure that messaging, visuals, and process steps remain consistent with initial BMAD planning documents.
 
-### Quick Deploy to Render
+C. QA/Compliance
 
-1. Fork/clone this repository
-2. Sign up at [render.com](https://render.com)
-3. Create new **Web Service** → Connect GitHub → Select this repo
-4. Configure:
-   - **Root Directory**: `backend`
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn app:app`
-   - Add environment variable: `FLASK_ENV=production`
-5. Create **Static Site** for frontend:
-   - **Root Directory**: `frontend`
-   - **Build Command**: `npm install --legacy-peer-deps && npm run build`
-   - **Publish Directory**: `build`
+Traceability: Every customer touchpoint and claim must be verifiably tied to your brand’s promise of transparency and legal compliance (audit-ready documentation).​
 
-## Project Structure
+Governance: Maintain clear records of decision logs, policy changes, and naming rationale—build these into your Brand.md, Visual Guidelines.md, and Brand_Naming_History.md files.
 
-```
-Adriatic-Claim-Co/
-├── backend/
-│   ├── app.py              # Flask application
-│   ├── db.py               # Database instance
-│   ├── requirements.txt    # Python dependencies
-│   ├── Dockerfile          # Backend container
-│   ├── api/
-│   │   ├── claims.py       # Claims API endpoints
-│   │   └── owners.py       # Owners API endpoints
-│   ├── models/
-│   │   └── models.py       # Database models
-│   └── tests/
-│       ├── test_app.py
-│       ├── test_claims_api.py
-│       └── test_owners_api.py
-├── frontend/
-│   ├── package.json
-│   ├── Dockerfile          # Frontend container
-│   ├── nginx.conf          # Production web server config
-│   ├── src/
-│   │   ├── App.js
-│   │   └── components/
-│   │       └── forms/
-│   │           ├── OwnerClaimIntakeForm.jsx
-│   │           └── OwnerClaimIntakeForm.test.jsx
-│   └── public/
-├── render.yaml             # Render.com deployment config
-├── Dockerfile              # Root-level Docker config
-└── DEPLOY.md               # Deployment guide
-```
+BMAD-Driven Answers to Brand Guidance Questions
+Brand Question	BMAD Agentic Process	Clarity Achieved
+Who do we serve?	Analyst maps market segments (Houston, broader, underserved groups)	Targeted persona profiles
+What makes us unique?	Competitive research, PRD features, value statements	Unique value clarified in all messaging
+What are our values?	Articulation workshop with all agents, recorded in Brand.md	Core values referenced in every doc
+How is our service structured?	Product Manager requirements; Architect workflow map	Documented remote processes, compliance
+How do we position pricing/fees?	Competitive analysis and PRD trade-off analysis	Market-aligned, defensible pricing tier
+What’s the emotional appeal?	Copywriting/brand storytelling epics, QA on tone	Consistent, trust-building communications
+How is lean/automation reflected?	Architect system diagrams, Dev/SM implementation	Efficiency visible (or invisible) by design
+Are we Houston-local or remote/national?	Market size, capability, and persona review	Positioning documented, adaptable over time
+How is branding reviewed and improved?	QA and Document Review phases in BMAD loop	Decision logs, ongoing Epic/task review
+The BMAD method produces living documents—every branding decision (values, visual choices, naming, compliance feature, pricing) is sharded into versioned assets, traceable back to its rationale and continuously iterated for market fit and regulatory compliance.​
 
-## API Endpoints
-
-### Owners
-
-- `POST /api/owners` - Create new owner
-- `GET /api/owners` - List all owners
-- `GET /api/owners/<id>` - Get owner by ID
-- `PUT /api/owners/<id>` - Update owner
-- `DELETE /api/owners/<id>` - Delete owner
-
-### Claims
-
-- `POST /api/claims` - Create new claim
-- `GET /api/claims` - List all claims
-- `GET /api/claims/<id>` - Get claim by ID
-- `PUT /api/claims/<id>` - Update claim
-- `DELETE /api/claims/<id>` - Delete claim
-
-### Health
-
-- `GET /health` - Health check endpoint
-
-## Environment Variables
-
-**Backend (.env)**:
-
-```bash
-DATABASE_URL=postgresql://user:password@host:5432/database
-FLASK_ENV=production
-SECRET_KEY=your_secret_key_here
-PORT=5000
-```
-
-**Frontend (.env.production)**:
-
-```bash
-REACT_APP_API_URL=https://your-backend-url.onrender.com
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is private and proprietary.
-
-## Support
-
-For deployment issues, see [DEPLOY.md](DEPLOY.md) or check platform documentation:
-
-- [Render Docs](https://render.com/docs)
-- [Google Cloud Run Docs](https://cloud.google.com/run/docs)
-- [Railway Docs](https://docs.railway.app)

@@ -236,9 +236,47 @@
 
 ---
 
+## Option D: Frontend on Firebase Hosting (with Backend on Render/Cloud Run)
+
+### Prerequisites
+
+- Firebase project created and Hosting enabled
+- Firebase CLI installed: `npm i -g firebase-tools`
+
+### One-time Setup
+
+1. Login: `firebase login`
+2. Select project: `firebase use --add`
+
+### Deploy via CI (GitHub Actions)
+
+1. Add GitHub Secrets:
+   - `FIREBASE_PROJECT_ID` — your Firebase project id
+   - `FIREBASE_SERVICE_ACCOUNT` — JSON for a service account with Hosting Admin
+   - `REACT_APP_API_URL` — your live backend URL (e.g., Render/Cloud Run)
+2. Push to `main` — the workflow `.github/workflows/firebase-hosting.yml` builds and deploys.
+
+### Deploy via CLI (local)
+
+1. Set production API URL:
+   ```bash
+   echo "REACT_APP_API_URL=https://your-backend.onrender.com" > frontend/.env.production
+   ```
+2. Deploy hosting only:
+   ```bash
+   firebase deploy --only hosting
+   ```
+
+Notes:
+
+- Environment variables in Create React App are embedded at build time. Update `.env.production` and rebuild/deploy to change the API URL.
+- Ensure your backend CORS allows your Firebase domain(s). Set `CORS_ALLOWED_ORIGINS` to a comma-separated list of allowed origins if needed.
+
+---
+
 ## Environment Variables Reference
 
-### Backend (.env)
+### Backend (.env | backend/.env.example)
 
 ```bash
 # Database - auto-provided by Render/Railway, or use external
@@ -252,9 +290,12 @@ SECRET_KEY=your_random_secret_key_generate_with_secrets_module
 
 # Port (auto-set by most platforms)
 PORT=5000
+
+# Optional CORS allowlist (comma-separated). If unset, defaults to localhost + Firebase wildcard domains.
+# CORS_ALLOWED_ORIGINS=https://yourapp.web.app,https://yourapp.firebaseapp.com
 ```
 
-### Frontend (.env.production)
+### Frontend (.env.production | frontend/.env.example)
 
 ```bash
 # Backend API URL - update after backend deployment
@@ -273,10 +314,10 @@ REACT_APP_API_URL=https://your-backend-url.onrender.com
 
 ```bash
 curl https://your-backend-url.onrender.com/health
-# Should return: {"status": "healthy"}
+# Should return JSON with status "ok"
 
 curl https://your-backend-url.onrender.com/
-# Should return: {"message": "Adriatic Claim Co API", "version": "1.0"}
+# Should return: {"message": "Adriatic Claim Co API", "version": "1.0.0", ...}
 ```
 
 ### Frontend API Connection

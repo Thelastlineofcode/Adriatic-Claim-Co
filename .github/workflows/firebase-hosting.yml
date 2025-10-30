@@ -17,6 +17,11 @@ jobs:
         with:
           node-version: 18
 
+      - name: Set production API URL env
+        run: |
+          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > frontend/.env.production
+        shell: bash
+
       - name: Build frontend
         run: |
           npm --prefix frontend ci --legacy-peer-deps
