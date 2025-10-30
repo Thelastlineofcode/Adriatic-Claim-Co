@@ -181,6 +181,8 @@ Last updated: 2025-10-30
 - Acceptance criteria:
   - Create a `legal/` folder with final contract templates and change log.
   - Add checklist of items for attorney review (fee language, POA language, retention period).
+  - Verify investigator licensure and role: confirm that the son-in-law's existing security license satisfies Texas requirements for investigator work, or identify additional licenses/registrations necessary.
+  - Draft Investigator Agreement and employment/classification recommendation for counsel review.
   - Track attorney sign-off in the issue.
 - Estimate: 2d
 - Labels: legal, compliance
