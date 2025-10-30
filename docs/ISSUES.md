@@ -212,3 +212,69 @@ Last updated: 2025-10-30
 ---
 
 If you want, I can also generate these issues automatically in GitHub for you (I already have CLI access), or I can break any of these into smaller subtasks. Tell me which format you prefer for creation (create all now / create prioritized subset / only create skeletons) and I will proceed when you confirm.
+
+---
+
+### Experiments added from Revenue Strategist plan
+
+The following experiment issues were added as actionable tasks (small, testable, with estimated effort). Use the Backlog progress checklist to mark them when complete.
+
+#### EXP-1: State & county integration pilot (Houston-first)
+
+- Hypothesis: Direct integration with Texas Comptroller search/API increases discovery_success_rate from ~10% to ~25% for Houston claims.
+- Acceptance criteria:
+  - Implement a connector/service that queries Texas Comptroller (or simulated API) for name-based search.
+  - End-to-end test that shows discovery_success_rate uplift on a sample dataset.
+  - Document manual fallback for counties without API.
+- Estimate: 5d
+- Labels: backend, integrations, data, priority-high
+
+#### EXP-2: Community partnership referrals (title companies & nonprofits)
+
+- Hypothesis: Partner referrals yield CAC_per_signed << paid channels (~$20–$50).
+- Acceptance criteria:
+  - Pilot agreement with at least 1 partner.
+  - Instrument partner channel (utm/campaign) and report CAC for the channel.
+  - At least 10 referred leads processed.
+- Estimate: 7d
+- Labels: growth, partnerships, ops
+
+#### EXP-3: Low-touch self-service funnel for claims < $600
+
+- Hypothesis: Automating intake & e-sign reduces average cost-per-handled-claim by 3–4x and increases conversion for low-value claims.
+- Acceptance criteria:
+  - Self-service UX implemented at `/mvp/intake-self-service`.
+  - Automated PDF + e-sign flow stub integrated and tested end-to-end.
+  - Track fulfillment cost per claim and conversion uplift.
+- Estimate: 14d
+- Labels: frontend, backend, product
+
+#### EXP-4: Discovery-before-sign pre-qualification
+
+- Hypothesis: Running discovery before signature increases the fraction of signers who have discoverable payouts and reduces wasted CAC.
+- Acceptance criteria:
+  - Add a lightweight pre-qualification endpoint (done: `/api/claims/qualify`), connected to intake flow.
+  - Measure fraction of signers with discoverable payouts vs. control group.
+  - If uplift > X% (tunable), roll out pre-qualification as default.
+- Estimate: 7d
+- Labels: backend, product, data
+
+#### EXP-5: Content & SEO for unclaimed-money queries by county
+
+- Hypothesis: High-quality localized content drives organic leads with CAC << paid channels.
+- Acceptance criteria:
+  - Publish 5 county-targeted pages with structured schema and local FAQ.
+  - Track organic leads/month and CAC for organic channel.
+  - At least one county page ranks on page 1 for target query within 90 days (measure via SERP tracker).
+- Estimate: ongoing (30d initial)
+- Labels: growth, content, seo
+
+#### EXP-6: Enterprise B2B lead / data pilot
+
+- Hypothesis: Some partners will pay per-processed-lead or subscription for data access, creating non-consumer revenue.
+- Acceptance criteria:
+  - Define data product and partner legal consent language.
+  - Pilot with 1 partner and collect revenue data.
+  - Ensure consumer-fee cap (10%) remains unaffected for claimants.
+- Estimate: 21d
+- Labels: bizdev, legal, growth
