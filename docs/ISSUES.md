@@ -2,18 +2,33 @@
 
 This document contains a prioritized list of issues (user stories) for the full buildout of the Adriatic Claim Co product. You can copy/paste each section into GitHub Issues when you're ready.
 
----
-
 ### 1) DB schema & migrations
 
-- Title: DB schema & migrations
-- User story: As a developer I need a production-ready relational schema so that claims, documents, KYC records, and payouts can be stored reliably and migrated over time.
-- Acceptance criteria:
-  - `backend/models.py` (SQLAlchemy) contains models: users, claims, claim_documents, kyc_checks, payouts, audit_logs.
-  - Alembic is configured with an initial migration that creates the schema.
-  - Local dev uses SQLite by default; documentation shows how to switch to Postgres.
-- Estimate: 3d
-- Labels: backend, database, infra
+- `backend/models.py` (SQLAlchemy) contains models: users, claims, claim_documents, kyc_checks, payouts, audit_logs.
+- Alembic is configured with an initial migration that creates the schema.
+- Local dev uses SQLite by default; documentation shows how to switch to Postgres.
+
+## Backlog progress
+
+Use the checklist below to track high-level progress inside this repository. When an issue is completed, mark its checkbox with an `x` and update the timestamp.
+
+- [ ] 1. DB schema & migrations
+- [ ] 2. Object storage for PII (S3/MinIO)
+- [ ] 3. Admin auth & RBAC
+- [ ] 4. KYC provider integration (sandbox)
+- [ ] 5. PDF generation & e-sign flow
+- [ ] 6. Payment / escrow integration (sandbox)
+- [ ] 7. Claim discovery & state lookup worker
+- [ ] 8. Admin reconciliation UI & workflows
+- [ ] 9. CI / tests / GitHub Actions
+- [ ] 10. Containerize services & deployment manifest
+- [ ] 11. Monitoring, logs, and error tracking
+- [ ] 12. Security hardening & encryption
+- [ ] 13. Legal review & documentation
+- [ ] 14. Spanish translation & bilingual UX
+- [ ] 15. Tests & QA for payout flows
+
+Last updated: 2025-10-30
 
 ---
 
