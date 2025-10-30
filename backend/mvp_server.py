@@ -78,6 +78,37 @@ def create_claim():
     return jsonify(response)
 
 
+@app.route('/api/claims/qualify', methods=['POST'])
+def qualify_claim():
+    """Pre-qualification endpoint (stub).
+
+    Expected input: JSON with minimal claimant info (name, email, phone, last_name, county_hint, optional ssn_last4).
+    This endpoint runs a lightweight discovery check (stubbed) and returns a `prequalified` boolean
+    and a `confidence_score` (0-100). It's intended to be called before asking the claimant to
+    sign a Finder Agreement to avoid signing low-probability leads.
+    """
+    data = request.get_json(force=True)
+    name = data.get('name') or ''
+    county = (data.get('county_hint') or '').lower()
+    ssn_last4 = data.get('ssn_last4')
+
+    # Simple heuristic stub (replace with real discovery worker integration):
+    # - If claimant provided ssn_last4, increase confidence
+    # - If county contains major-county keywords (e.g., harris, dallas) bump score
+    score = 10
+    if ssn_last4:
+        score += 40
+    if any(k in county for k in ['harris', 'travis', 'dallas', 'bexar', 'tarrant']):
+        score += 25
+    if len(name.split()) >= 2:
+        score += 10
+
+    score = min(100, score)
+    prequalified = score >= 40
+
+    return jsonify({'prequalified': prequalified, 'confidence_score': score})
+
+
 @app.route('/api/admin/claims', methods=['GET'])
 def list_claims():
     """Development-only endpoint: return stored claims as JSON.
