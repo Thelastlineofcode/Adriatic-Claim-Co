@@ -29,7 +29,9 @@ python3 -m http.server 8000 --directory web/mvp
 ```
 
 Notes & CORS
+
 - The intake form posts to `http://127.0.0.1:5001/api/claims`. If you serve static files from a different origin/port, the browser may block cross-origin requests. For local testing, either serve static files from the same origin or enable/allow CORS on your Flask stub (e.g., install `flask-cors` and add `CORS(app)`).
 
 Security
+
 - The Flask stub and admin page are development-only and lack authentication. Do not expose them publicly.
