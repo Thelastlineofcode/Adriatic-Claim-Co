@@ -1,0 +1,69 @@
+{
+  "assumptions": {
+    "avg_claim_amount": 1200,
+    "contingency_pct": 0.1,
+    "claims_in_texas_per_year": 352000
+  },
+  "scenarios": {
+    "conservative": [
+      {
+        "year": 1,
+        "penetration": 5e-05,
+        "recoveries": 17,
+        "revenue": 2040.0
+      },
+      {
+        "year": 2,
+        "penetration": 0.0001,
+        "recoveries": 35,
+        "revenue": 4200.0
+      },
+      {
+        "year": 3,
+        "penetration": 0.0002,
+        "recoveries": 70,
+        "revenue": 8400.0
+      }
+    ],
+    "base": [
+      {
+        "year": 1,
+        "penetration": 0.0005,
+        "recoveries": 176,
+        "revenue": 21120.0
+      },
+      {
+        "year": 2,
+        "penetration": 0.0015,
+        "recoveries": 528,
+        "revenue": 63360.0
+      },
+      {
+        "year": 3,
+        "penetration": 0.004,
+        "recoveries": 1408,
+        "revenue": 168960.0
+      }
+    ],
+    "aggressive": [
+      {
+        "year": 1,
+        "penetration": 0.002,
+        "recoveries": 704,
+        "revenue": 84480.0
+      },
+      {
+        "year": 2,
+        "penetration": 0.006,
+        "recoveries": 2112,
+        "revenue": 253440.0
+      },
+      {
+        "year": 3,
+        "penetration": 0.02,
+        "recoveries": 7040,
+        "revenue": 844800.0
+      }
+    ]
+  }
+}
