@@ -1,42 +1,37 @@
-# Xcellent1 Lawn Care — Houston Area Property ETL
+# Xcellent1 Lawn Care — LaPlace, LA Property ETL
 
 Real estate investment pipeline for Xcellent1 Lawn Care & Landscaping family business.
-Target areas: Houston metro suburban neighborhoods where landscaping business operates.
+Operates out of LaPlace, Louisiana — St. John the Baptist Parish.
 
 ## Target Geography
-- **Primary**: Harris County (inner loop + NW Houston suburbs where Xcellent1 operates)
-- **Secondary**: Fort Bend (SW), Montgomery (N), Brazoria (SE)
-- **Asset Type Focus**: Distressed single-family residential, vacant lots, small commercial
-- **Strategy**: Leverage existing service area knowledge — Xcellent1 crew sees these neighborhoods daily
+- **Primary**: St. John the Baptist Parish, LA (LaPlace, Reserve, Garyville, Edgard)
+- **Secondary ring**: St. Charles Parish (Hahnville, Destrehan, Luling), St. James Parish (Lutcher, Gramercy)
+- **Asset Types**: Distressed SFR, vacant lots, adjudicated properties, commercial
+- **Strategy**: Xcellent1 service routes = ground-level neighborhood intel on condition + vacancy
 
 ## Competitive Advantage
-- Xcellent1 field crew = ground-level intel on neighborhood condition, vacancy, distress
-- Lawn care clients may be motivated sellers (deferred maintenance, moving)
-- Service routes map directly to target acquisition zones
+- Field crews operating in LaPlace daily see overgrown lots, boarded windows, deferred maintenance
+- Service route ZIPs map directly to acquisition targets
+- Same adjudicated property acquisition path as Grandee's (St. Charles) — no redemption period
 
 ## Data Sources
 
 | Source | Type | Notes |
 |---|---|---|
-| HCAD bulk download | Free full-county parcel data | Reuses harris.py from tax-etl |
-| hctax.net | Delinquent / auction lists | Harris primary |
-| mvbalaw.com | Multi-county auction aggregator | Harris + ring |
-| HAR.com (Houston MLS) | Days-on-market, price reductions | Playwright — JS-rendered |
-| Zillow (Houston) | Zestimate + DOM comps | Playwright |
-| Realtor.com (Houston) | Price history | Playwright |
-| Code enforcement (COH) | Violations + dangerous structures | city of Houston open data |
-
-## Strategy Filter
-Xcellent1 targets overlap with service routes. The scorer adds a `service_route_proximity` flag
-if the property is within 5 miles of known Xcellent1 service ZIP codes.
+| St. John the Baptist Assessor | Parcel data | https://www.sjbassessor.org |
+| St. John Parish Govt | Adjudicated + tax sale | https://www.stjohnla.gov |
+| lataxauction.com | LA adjudicated aggregator | Playwright — JS-rendered |
+| St. Charles Assessor | Secondary ring | https://www.stcharlesassessor.org |
+| St. James Parish | Secondary ring | https://www.stjamesla.gov |
+| Louisiana Tax Commission | State-level land sales | https://revenue.louisiana.gov/LandSales |
 
 ## CLI
 ```bash
-python run.py --zone harris_nw        # NW Houston (primary service area)
-python run.py --zone all              # full Houston metro
-python run.py --zone harris_nw --dry-run
+python run.py --parish st_john_the_baptist   # primary
+python run.py --parish all                   # full ring
+python run.py --parish st_john_the_baptist --dry-run
 ```
 
-## Playwright Note
-HAR.com, Zillow, and Realtor.com are JS-rendered. Static httpx will not work.
-This pipeline uses the shared Crawler class from grandees-etl (or local copy).
+## Louisiana Adjudicated Property
+Same process as Grandee's pipeline. See `services/grandees-etl/docs/LOUISIANA_NOTES.md`.
+Key: no redemption period post-sale, below-market pricing, low investor competition vs. Texas.

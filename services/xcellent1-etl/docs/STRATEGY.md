@@ -1,34 +1,52 @@
-# Xcellent1 Real Estate Strategy
+# Xcellent1 Real Estate Strategy — LaPlace, LA
+
+## Base of Operations
+Xcellent1 Lawn Care & Landscaping operates out of LaPlace, Louisiana,
+in St. John the Baptist Parish. Service routes cover LaPlace, Reserve,
+Garyville, and Edgard.
 
 ## The Edge
-Xcellent1's lawn care service routes are a real-time neighborhood intelligence feed.
-Field crews see: overgrown yards, accumulated mail, boarded windows, deferred maintenance.
-Every route is a property scan. That ground-level signal is combined with public data here.
+Xcellent1 field crews run service routes across St. John the Baptist Parish daily.
+They see overgrown yards, boarded windows, accumulated mail, deferred maintenance.
+Every route is a live property condition scan. That ground-level signal is combined
+with public adjudicated property data here to surface the highest-quality leads.
 
 ## Target Profile
-- Harris County residential, class A/R (SFR)
-- Appraised value $40k–$250k
-- Delinquent OR on auction list
-- Code enforcement violations (City of Houston open data)
-- Within Xcellent1 service ZIP codes = acquisition priority HIGH
+- St. John the Baptist Parish, LA
+- Adjudicated OR delinquent
+- SFR, vacant lot, or small commercial
+- Within Xcellent1 service ZIPs (LaPlace 70068, Reserve 70084, Garyville 70051)
+- Properties where crew has observed distress = acquisition_priority HIGH
 
 ## Acquisition Priority Tiers
 | Tier | Criteria | Action |
 |---|---|---|
-| HIGH | In service zone + delinquent + code violations | Bid immediately, skip-trace owner |
-| MEDIUM | In service zone + delinquent, no violations | Research title, add to watch list |
-| LOW | Out of zone but strong distress signal | Hold for future expansion routes |
+| HIGH | In service ZIP + adjudicated/delinquent | Bid / contact parish council immediately |
+| MEDIUM | Ring parish (St. Charles or St. James) + adjudicated | Research title, watch list |
+| LOW | Out of area, low distress signal | Skip |
 
-## HAR.com Comp Enrichment
-HAR (Houston Association of Realtors) is the Houston MLS. Days on market, price reductions,
-and sold comps from HAR give an ARV estimate for each candidate. Playwright scrapes
-the JS-rendered search results and attaches `arv_estimate` + `comp_count` to each record.
+## Louisiana Adjudicated vs. Texas Tax Deed
+| Factor | Louisiana (Adjudicated) | Texas (Tax Deed) |
+|---|---|---|
+| Redemption period | None after completed sale | 2 years (non-homestead) |
+| Seller | Parish council directly | Constable/Sheriff auction |
+| Price | Often well below market | Competitive bidding |
+| Title risk | Prior mortgages may survive | Same |
+| Investor competition | Very low (LaPlace market) | High (Houston market) |
 
-## City of Houston Code Enforcement
-CoH open data GeoJSON endpoint returns active code enforcement cases with addresses.
-Violations = high distress signal. Cross-referencing delinquent tax parcels with
-open code cases produces the highest-quality lead list in the pipeline.
+## Ring Strategy
+St. Charles (Destrehan/Luling) and St. James (Gramercy/Lutcher) border St. John
+and are already partially covered by Grandee's pipeline. Xcellent1 ring scrapers
+are lightweight fallbacks that pull lataxauction.com for these parishes in case
+Grandee's ETL has not run or data is stale.
 
-## Nightly Schedule
-Runs at 5:30 AM CDT — AFTER tax-etl Harris bulk download (1 AM) completes.
-Pipelines are independent but share the same HCAD data layer.
+## Full Nightly Schedule Context
+| Time CDT | Pipeline | Task |
+|---|---|---|
+| 1:00 AM | tax-etl (AdriaticCC) | Harris HCAD bulk |
+| 1:30–3:30 AM | tax-etl | Gulf Coast ring |
+| 4:00 AM | grandees-etl | St. Charles primary |
+| 4:30–5:00 AM | grandees-etl | Jefferson, St. John |
+| 5:30 AM | xcellent1-etl | St. John the Baptist (LaPlace) |
+| 5:50 AM | xcellent1-etl | St. Charles ring |
+| 6:10 AM | xcellent1-etl | St. James ring |

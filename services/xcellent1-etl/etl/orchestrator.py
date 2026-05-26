@@ -1,23 +1,26 @@
 """
-Xcellent1 ETL orchestrator — Houston metro residential distress.
+Xcellent1 ETL orchestrator — LaPlace, LA (St. John the Baptist Parish) anchor.
+Ring parishes: St. Charles (west), St. James (east).
 """
 import logging
-from etl.scrapers import harris_residential
+from etl.scrapers import st_john_the_baptist, st_charles_ring, st_james
 
 SCRAPER_MAP = {
-    "harris_nw":  harris_residential.ingest,
-    "harris_all": harris_residential.ingest,
+    "st_john_the_baptist": st_john_the_baptist.ingest,   # PRIMARY — LaPlace
+    "st_charles":          st_charles_ring.ingest,       # ring west
+    "st_james":            st_james.ingest,              # ring east
 }
 
-ZONES = list(SCRAPER_MAP.keys())
+LA_RING_PARISHES = ["st_john_the_baptist", "st_charles", "st_james"]
+ALL_PARISHES = list(SCRAPER_MAP.keys())
 
 
-def run_zone_etl(zone: str, dry_run: bool = False):
-    scraper = SCRAPER_MAP.get(zone)
+def run_parish_etl(parish: str, dry_run: bool = False):
+    scraper = SCRAPER_MAP.get(parish)
     if not scraper:
-        raise ValueError(f"No scraper for zone: {zone}")
+        raise ValueError(f"No scraper registered for parish: {parish}")
     raw = scraper()
-    logging.info(f"[xcellent1/{zone}] {len(raw):,} candidates")
+    logging.info(f"[xcellent1/{parish}] candidates: {len(raw):,}")
     if not dry_run:
         from etl.db import upsert_properties, get_db
         db = get_db()
@@ -25,8 +28,9 @@ def run_zone_etl(zone: str, dry_run: bool = False):
 
 
 def run_all_etl(dry_run: bool = False):
-    for zone in ZONES:
+    for parish in ALL_PARISHES:
         try:
-            run_zone_etl(zone, dry_run=dry_run)
+            logging.info(f"=== XCELLENT1 | {parish.upper()} ===")
+            run_parish_etl(parish, dry_run=dry_run)
         except Exception as e:
-            logging.error(f"[xcellent1/{zone}] failed: {e}", exc_info=True)
+            logging.error(f"[xcellent1/{parish}] failed: {e}", exc_info=True)
