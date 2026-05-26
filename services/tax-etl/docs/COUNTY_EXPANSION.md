@@ -1,41 +1,44 @@
-# County Expansion Playbook
+# Gulf Coast County Coverage
 
-The ETL is designed to expand outward from Harris County. Each new county requires:
+Adriatic Claim Co pipeline starts from Harris County and expands outward through the full Gulf Coast metro.
 
-1. **Scraper** — add `etl/scrapers/<county>.py` with an `ingest()` function
-2. **FEMA download** — add URL to `scripts/download_fema.py` FEMA_URLS dict
-3. **Register** — add county to `COUNTY_ORDER` in `run.py` and `SCRAPER_MAP` in `orchestrator.py`
-4. **Test** — `python run.py --county <county> --dry-run`
+## Active Counties
 
-## Expansion Priority Order
+| Priority | County | FIPS | CAD | Auction Source | Notes |
+|---|---|---|---|---|---|
+| 1 | **Harris** | 48201 | hcad.org (bulk download) | hctax.net + mvbalaw + foreclosehouston | PRIMARY — Houston, 1.6M parcels |
+| 2 | **Galveston** | 48167 | galvestoncad.org | mvbalaw | Gulf Coast / waterfront / island |
+| 3 | **Fort Bend** | 48157 | fbcad.org | mvbalaw + constable list | SW Houston growth corridor |
+| 4 | **Brazoria** | 48039 | brazoriacad.org | mvbalaw + delinquent roll | SE / Gulf Coast |
+| 5 | **Montgomery** | 48339 | mcad-tx.org | mvbalaw | North Houston, The Woodlands |
+| 6 | **Chambers** | 48071 | chamberscad.org | mvbalaw | East Harris — low competition |
+| 7 | **Liberty** | 48291 | libertycad.org | mvbalaw | NE rural — very low competition |
+| 8 | **Bell** | 48027 | bellcad.org/data-portal | mvbalaw | Adrianne's Bramble Bush target |
 
-| Priority | County | CAD Source | Delinquent Source | Notes |
-|---|---|---|---|---|
-| 1 | Harris | hcad.org | caopay.harriscountytx.gov | Primary — Houston |
-| 2 | Bell | bellcad.org/data-portal | bellcountytax.com | Morgan's Point Resort |
-| 3 | Fort Bend | fbcad.org | fortbendcountytx.gov | SW Houston growth |
-| 4 | Galveston | galvestoncad.org | galvestoncountytx.gov | Coastal, waterfront |
-| 5 | Montgomery | mcad-tx.org | mctx.org | N Houston, appreciating |
-| 6 | Brazoria | brazoriacad.org | brazoriacountytx.gov | SE Houston |
-| 7 | Chambers | chamberscad.org | chamberscountytx.gov | East, lower competition |
+## HCAD Bulk Download (Harris — Critical)
 
-## Data Source Map
+Harris is the only county with a true public bulk data download:
+- URL: https://hcad.org/pdata/pdata-property-downloads.html
+- Format: pipe-delimited `.txt` files inside `.zip`
+- Key files: `real_acct.txt`, `land.txt`, delinquent file
+- Size: ~500MB compressed
+- Update cadence: certified annually, preliminary quarterly
 
-- **mvbalaw.com** — covers most Texas counties, monthly auction lists (free)
-- **foreclosehouston.com** — Harris-specific pre-sale list (free tier)
-- **caopay.harriscountytx.gov** — Harris delinquent account search
-- **Texas Comptroller county directory** — https://comptroller.texas.gov/taxes/property-tax/county-directory/
+All other counties use mvbalaw.com auction lists as the primary delinquency signal.
+Fort Bend also has a direct constable precinct auction list.
+Brazoria publishes a delinquent tax roll at the county website.
 
-## Adding a New Scraper (Template)
+## Adding a New County
 
-```python
-# etl/scrapers/<county>.py
-from typing import List, Dict
+1. Add `etl/scrapers/<county>.py` with `ingest() -> List[Dict]`
+2. Register in `SCRAPER_MAP` in `orchestrator.py`
+3. Add FEMA URL to `scripts/download_fema.py`
+4. Add schedule slot in `scripts/schedule.py`
+5. Test: `python run.py --county <county> --dry-run`
 
-def ingest() -> List[Dict]:
-    records = []
-    # 1. Try bulk CSV from CAD data portal
-    # 2. Fallback: scrape individual property search
-    # 3. Merge with mvbalaw auction list
-    return records
-```
+## Texas Deed Sale Reminder
+
+Texas is NOT a lien certificate state. Winning bidders receive a **Constable's/Sheriff's Deed without warranty**.
+- Homestead/agricultural: 6-month right of redemption (owner pays bid + 25%)
+- All other: 2-year right of redemption (bid + 25% yr1, bid + 50% yr2)
+- Always run title search before bidding. Flood zone status is binary: bid or skip.
