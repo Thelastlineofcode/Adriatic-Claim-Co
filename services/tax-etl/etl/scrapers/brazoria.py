@@ -1,74 +1,50 @@
 """
 Brazoria County — SE Houston / Gulf Coast.
 Sources:
-  - brazoriacad.org
-  - mvbalaw.com/tax-sales/brazoria-county/
-  - brazoriacountytx.gov delinquent tax roll
+  - PBFCM tax sale PDF (primary, confirmed working)
+  - Brazoria County delinquent tax roll (OneDrive Excel)
+  - LGBS taxsales.lgbs.com (backup)
 """
 import logging
 import httpx
-from bs4 import BeautifulSoup
-from tenacity import retry, stop_after_attempt, wait_exponential
+import io
+import re
 from typing import List, Dict
+from openpyxl import load_workbook
+from etl.scrapers.pbfcm import ingest_county as pbfcm_ingest
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; AdriaticClaimCo/1.0)"}
-
-
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
-def fetch_html(url: str) -> str:
-    resp = httpx.get(url, headers=HEADERS, timeout=30, follow_redirects=True)
-    resp.raise_for_status()
-    return resp.text
+HEADERS = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
 
 
-def scrape_mvba() -> List[Dict]:
-    url = "https://mvbalaw.com/tax-sales/brazoria-county/"
+def scrape_delinquent_roll() -> List[Dict]:
+    """Download Brazoria County delinquent tax roll from OneDrive."""
+    url = "https://1drv.ms/x/c/c5b1985dca72f232/IQALb5drpwCETI730d2prW5DAfgL-YxAvVPQbGfc5c1Mjc4?e=WmY3TE"
     try:
-        html = fetch_html(url)
-        soup = BeautifulSoup(html, "lxml")
+        resp = httpx.get(url, headers=HEADERS, follow_redirects=True, timeout=120)
+        resp.raise_for_status()
+        wb = load_workbook(io.BytesIO(resp.content), read_only=True, data_only=True)
+        ws = wb.active
         records = []
-        for row in soup.select("table tr")[1:]:
-            cols = [td.get_text(strip=True) for td in row.find_all("td")]
-            if len(cols) >= 3:
-                records.append({
-                    "parcel_id": cols[0],
-                    "owner_name": cols[1],
-                    "address": cols[2],
-                    "min_bid": cols[3] if len(cols) > 3 else "0",
-                    "auction_date": cols[4] if len(cols) > 4 else None,
-                    "source": "mvba_auction",
-                    "county": "brazoria",
-                    "is_delinquent": True,
-                    "on_auction_list": True,
-                })
-        logging.info(f"[brazoria/mvba] {len(records)} records")
-        return records
-    except Exception as e:
-        logging.warning(f"[brazoria/mvba] failed: {e}")
-        return []
-
-
-def scrape_brazoria_delinquent() -> List[Dict]:
-    """Brazoria County delinquent tax roll (public HTML)."""
-    url = "https://www.brazoriacountytx.gov/departments/tax-office/property-taxes/delinquent-tax-roll"
-    try:
-        html = fetch_html(url)
-        soup = BeautifulSoup(html, "lxml")
-        records = []
-        for row in soup.select("table tr")[1:]:
-            cols = [td.get_text(strip=True) for td in row.find_all("td")]
-            if len(cols) >= 2:
-                records.append({
-                    "parcel_id": cols[0],
-                    "owner_name": cols[1] if len(cols) > 1 else "",
-                    "address": cols[2] if len(cols) > 2 else "",
-                    "est_tax_due": cols[3] if len(cols) > 3 else "0",
-                    "source": "brazoria_delinquent",
-                    "county": "brazoria",
-                    "is_delinquent": True,
-                    "on_auction_list": False,
-                })
-        logging.info(f"[brazoria/delinquent] {len(records)} records")
+        headers = []
+        for i, row in enumerate(ws.iter_rows(values_only=True)):
+            if i == 0:
+                headers = [str(c).lower().strip() if c else f"col_{j}" for j, c in enumerate(row)]
+                continue
+            row_dict = dict(zip(headers, [str(c or "") for c in row]))
+            pid = row_dict.get("account", row_dict.get("parcel", row_dict.get("col_0", "")))
+            if not pid or pid == "None":
+                continue
+            records.append({
+                "parcel_id": pid.strip(),
+                "owner_name": row_dict.get("owner", row_dict.get("owner_name", "")).strip(),
+                "address": row_dict.get("property_address", row_dict.get("situs", "")).strip(),
+                "est_tax_due": float(re.sub(r"[^\d.]", "", row_dict.get("amount_due", row_dict.get("total_due", "0"))) or 0),
+                "source": "brazoria_delinquent",
+                "county": "brazoria",
+                "is_delinquent": True,
+                "on_auction_list": False,
+            })
+        logging.info(f"[brazoria/delinquent] {len(records)} records from OneDrive")
         return records
     except Exception as e:
         logging.warning(f"[brazoria/delinquent] failed: {e}")
@@ -77,8 +53,8 @@ def scrape_brazoria_delinquent() -> List[Dict]:
 
 def ingest() -> List[Dict]:
     records = []
-    records.extend(scrape_mvba())
-    records.extend(scrape_brazoria_delinquent())
+    records.extend(pbfcm_ingest("brazoria"))
+    records.extend(scrape_delinquent_roll())
     seen = {}
     for r in records:
         pid = r.get("parcel_id") or r.get("address", "")
