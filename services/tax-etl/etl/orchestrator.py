@@ -1,9 +1,14 @@
 """
 County ETL orchestrator — Gulf Coast expansion from Harris outward.
 Registered counties cover the full Houston / Gulf Coast metro area.
+
+Every county gets an LGBS enrichment overlay after its primary scraper:
+adds auction metadata (cause_no, sale_type, status, sale_date) for any
+LGBS property matching a parcel_id, and appends unmatched LGBS properties.
 """
 import logging
 from etl.scrapers import harris, galveston, fort_bend, montgomery, brazoria, chambers, liberty, bell
+from etl.scrapers.lgbs import enrich as lgbs_enrich
 from etl.normalizer import normalize_records
 from etl.scorer import score_properties
 from etl.db import upsert_properties, get_db
@@ -32,6 +37,9 @@ def run_county_etl(county: str, dry_run: bool = False):
 
     raw = scraper()
     logging.info(f"[{county}] raw records: {len(raw):,}")
+
+    raw = lgbs_enrich(raw, county)
+    logging.info(f"[{county}] after lgbs enrichment: {len(raw):,}")
 
     normalized = normalize_records(raw, county)
     scored = score_properties(normalized)
